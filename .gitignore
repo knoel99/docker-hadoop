@@ -1,1 +1,4 @@
 data/
+.scala-build/
+.metals/
+.vscode/
