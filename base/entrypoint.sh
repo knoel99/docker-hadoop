@@ -114,4 +114,12 @@ do
     wait_for_it ${i}
 done
 
+function configure_kafka_hbase() {
+    addProperty /etc/hadoop/core-site.xml kafka.bootstrap.servers "kafka:9092"
+    addProperty /etc/hadoop/core-site.xml hbase.zookeeper.quorum "hbase"
+}
+
+# Call this function before the exec $@ at the end of the script
+configure_kafka_hbase
+
 exec $@
