@@ -1,0 +1,49 @@
+version: "3"
+
+services:
+  spark-master:
+    image: bde2020/spark-master:3.0.0-hadoop3.2
+    container_name: spark-master
+    ports:
+      - 8080:8080
+      - 7077:7077
+    restart: always
+    environment:
+      SERVICE_PRECONDITION: "namenode:9000 namenode:9870 datanode:9864 resourcemanager:8088 nodemanager:8042"
+    env_file:
+      - ./hadoop.env
+
+  spark-worker:
+    image: bde2020/spark-worker:3.0.0-hadoop3.2
+    container_name: spark-worker
+    environment:
+      SERVICE_PRECONDITION: "spark-master:7077"
+    env_file:
+      - ./hadoop.env
+
+  spark-sum-job:
+    build: 
+      context: ./spark-app
+      dockerfile: Dockerfile
+    container_name: spark-sum-job
+    networks:
+      - docker-hadoop_default
+    environment:
+      - IVY_HOME=/tmp/.ivy2
+    command: >
+      /opt/spark/bin/spark-submit
+      --class SparkRDDSum
+      --master spark://spark-master:7077
+      /app/sparkrddsum-assembly-1.0.jar
+
+
+networks:
+  docker-hadoop_default:
+    external: true
+
+
+
+volumes:  
+  hadoop_namenode:
+  hadoop_datanode:
+  hadoop_datanode2:
