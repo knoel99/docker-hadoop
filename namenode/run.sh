@@ -11,9 +11,12 @@ if [ -z "$CLUSTER_NAME" ]; then
   exit 2
 fi
 
+echo "remove lost+found from $namedir"
+rm -r $namedir/lost+found
+
 if [ "`ls -A $namedir`" == "" ]; then
   echo "Formatting namenode name directory: $namedir"
-  $HADOOP_PREFIX/bin/hdfs --config $HADOOP_CONF_DIR namenode -format $CLUSTER_NAME 
+  $HADOOP_HOME/bin/hdfs --config $HADOOP_CONF_DIR namenode -format $CLUSTER_NAME
 fi
 
-$HADOOP_PREFIX/bin/hdfs --config $HADOOP_CONF_DIR namenode
+$HADOOP_HOME/bin/hdfs --config $HADOOP_CONF_DIR namenode
