@@ -5,8 +5,12 @@ object SparkRDDSum {
     // Create a SparkConf object
     val conf = new SparkConf()
       .setAppName("SparkRDDSum")
-      // Use local[*] for local testing, or comment this line to use the master specified in spark-submit
-      .setMaster("local[*]")  
+      .setMaster("local[*]")  // Use local Spark context for testing
+      .set("spark.hadoop.fs.defaultFS", "hdfs://namenode:8020")
+      .set("spark.hadoop.yarn.resourcemanager.hostname", "resourcemanager")
+      .set("spark.hadoop.security.authentication", "simple")
+      .set("spark.hadoop.security.authorization", "false")
+      .set("spark.hadoop.user.name", "sparkuser")
 
     // Create a SparkContext using the configuration
     val sc = new SparkContext(conf)

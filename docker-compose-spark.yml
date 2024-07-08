@@ -30,10 +30,14 @@ services:
       - docker-hadoop_default
     environment:
       - IVY_HOME=/tmp/.ivy2
+      - HADOOP_CONF_DIR=/etc/hadoop/conf
+      - HADOOP_USER_NAME=sparkuser
+    volumes:
+      - ./hadoop-conf:/etc/hadoop/conf
     command: >
       /opt/spark/bin/spark-submit
+      --conf spark.jars.ivy=/tmp/.ivy2
       --class SparkRDDSum
-      --master spark://spark-master:7077
       /app/sparkrddsum-assembly-1.0.jar
 
 
